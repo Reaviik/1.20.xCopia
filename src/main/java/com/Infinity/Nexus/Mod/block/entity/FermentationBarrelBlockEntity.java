@@ -32,6 +32,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.MyceliumBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -288,6 +290,10 @@ public class FermentationBarrelBlockEntity extends BlockEntity implements MenuPr
     }
     private void setMaxProgress() {
         int time = getCurrentRecipe().get().getDuration();
+
+        if(this.level.getBlockState(getBlockPos().below()).getBlock() instanceof MyceliumBlock){
+            time = time / 2;
+        }
         if(itemHandler.getStackInSlot(INPUT_SLOT).getItem() == ModItemsAdditions.INFINITY_INGOT.get()){
             time = time * itemHandler.getStackInSlot(INPUT_SLOT).getCount();
         }
@@ -326,14 +332,19 @@ public class FermentationBarrelBlockEntity extends BlockEntity implements MenuPr
                 itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(stack, recipeResultCount + itemHandler.getStackInSlot(OUTPUT_SLOT).getCount()));
             }
         }else{
+            int inputCount = recipe.get().getInputCount();
+            int fluidInputCount = recipe.get().getInputFluidStack().getAmount();
             int recipeFluidOutputAmount = recipe.get().getOutputFluidStack().getAmount();
             FluidStack recipeFluidOutput = recipe.get().getOutputFluidStack();
             recipeFluidOutput.setAmount(recipeFluidOutputAmount);
-            this.FLUID_STORAGE_INPUT.drain(recipeFluidInputAmount, IFluidHandler.FluidAction.EXECUTE);
-            this.FLUID_STORAGE_INPUT.fill(recipeFluidOutput, IFluidHandler.FluidAction.EXECUTE);
+            while (itemHandler.getStackInSlot(INPUT_SLOT).getCount() >= inputCount && this.FLUID_STORAGE_INPUT.getFluidAmount() >= fluidInputCount) {
+                this.FLUID_STORAGE_INPUT.drain(recipeFluidInputAmount, IFluidHandler.FluidAction.EXECUTE);
+                this.FLUID_STORAGE_INPUT.fill(recipeFluidOutput, IFluidHandler.FluidAction.EXECUTE);
 
-            itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(stack, recipeResultCount + itemHandler.getStackInSlot(OUTPUT_SLOT).getCount()));
-            itemHandler.getStackInSlot(INPUT_SLOT).shrink(recipeInputCount);
+                itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(stack, recipeResultCount + itemHandler.getStackInSlot(OUTPUT_SLOT).getCount()));
+                itemHandler.getStackInSlot(INPUT_SLOT).shrink(recipeInputCount);
+
+            }
         }
 
         level.playSound(null, this.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);

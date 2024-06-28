@@ -390,7 +390,7 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
 
         ItemStack component = this.itemHandler.getStackInSlot(COMPONENT_SLOT);
 
-        ModUtils.UseComponent(component, level, this.getBlockPos());
+        ModUtils.useComponent(component, level, this.getBlockPos());
 
         this.FLUID_STORAGE.drain(1, IFluidHandler.FluidAction.EXECUTE);
         this.itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(result.getItem(), this.itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + result.getCount()));

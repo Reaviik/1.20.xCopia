@@ -1,6 +1,7 @@
 package com.Infinity.Nexus.Mod.recipe;
 
 import com.Infinity.Nexus.Mod.InfinityNexusMod;
+import com.Infinity.Nexus.Mod.block.entity.AssemblerBlockEntity;
 import com.Infinity.Nexus.Mod.block.entity.FactoryBlockEntity;
 import com.Infinity.Nexus.Mod.utils.ModUtils;
 import com.google.gson.JsonArray;
@@ -16,9 +17,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class FactoryRecipes implements Recipe<SimpleContainer> {
     private final NonNullList<Ingredient> inputItems;
@@ -28,7 +27,7 @@ public class FactoryRecipes implements Recipe<SimpleContainer> {
     private final int duration;
     private final int energy;
 
-    public FactoryRecipes(NonNullList<Ingredient> inputItems,int[] amountInput, ItemStack output, ResourceLocation id, int duration, int energy) {
+    public FactoryRecipes(NonNullList<Ingredient> inputItems, int[] amountInput, ItemStack output, ResourceLocation id, int duration, int energy) {
         this.inputItems = inputItems;
         this.amountInput = amountInput;
         this.output = output;
@@ -43,25 +42,45 @@ public class FactoryRecipes implements Recipe<SimpleContainer> {
         if (pLevel.isClientSide()) {
             return false;
         }
+        int matches = 0;
+        int componentSlot = FactoryBlockEntity.getComponentSlot();
+        ItemStack stack = pContainer.getItem(componentSlot);
+        List<Integer> slotsVerificados = new ArrayList<>();
 
+        for (int i = 1; i < 17; i++) {
+            for (int j = 0; j < 16; j++) {
+                if (inputItems.get(i).test(pContainer.getItem(j)) && !slotsVerificados.contains(j)) {
+                    matches++;
+                    slotsVerificados.add(j);
+                    break;
+                }
+            }
+        }
+        if (matches < 16) {
+            return false;
+        }
+        /*
         int componentSlot = FactoryBlockEntity.getComponentSlot();
         ItemStack stack = pContainer.getItem(componentSlot);
 
         // Criar um conjunto para rastrear os slots já verificados e os ingredientes associados a eles
 
         for (int i = 1; i < 17; i++) {
-            if(!inputItems.get(i).test(pContainer.getItem(i - 1)) || pContainer.getItem(i - 1).getCount() < amountInput[i]) {
+            if (!inputItems.get(i).test(pContainer.getItem(i - 1)) || pContainer.getItem(i - 1).getCount() < amountInput[i]) {
                 return false;
             }
         }
 
+         */
         return inputItems.get(0).test(stack);
+
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return inputItems;
     }
+
     @Override
     public ItemStack assemble(SimpleContainer pContainer, RegistryAccess pRegistryAccess) {
         return output.copy();
@@ -137,7 +156,7 @@ public class FactoryRecipes implements Recipe<SimpleContainer> {
             int duration = pSerializedRecipe.get("duration").getAsInt();
             int energy = pSerializedRecipe.get("energy").getAsInt();
 
-            return new FactoryRecipes(inputs, amountInput, output,pRecipeId,duration, energy);
+            return new FactoryRecipes(inputs, amountInput, output, pRecipeId, duration, energy);
         }
 
         @Override

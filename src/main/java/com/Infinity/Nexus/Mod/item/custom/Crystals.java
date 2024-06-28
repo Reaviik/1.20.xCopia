@@ -22,7 +22,7 @@ public class Crystals extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
-            components.add(Component.translatable("item.infinity_nexus.crystal_description").append(" §5"+tier));
+            components.add(Component.translatable("item.infinity_nexus.crystal_description").append(" §5"+tier+" ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
         } else {
             components.add(Component.translatable("tooltip.infinity_nexus.pressShift"));
         }

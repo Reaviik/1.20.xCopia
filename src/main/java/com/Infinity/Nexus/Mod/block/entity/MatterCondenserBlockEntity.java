@@ -304,7 +304,7 @@ public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvi
 
         ItemStack component = this.itemHandler.getStackInSlot(COMPONENT_SLOT);
 
-        ModUtils.UseComponent(component, level, this.getBlockPos());
+        ModUtils.useComponent(component, level, this.getBlockPos());
 
         this.itemHandler.insertItem(OUTPUT_SLOT, new ItemStack(ModItemsProgression.STABLE_MATTER.get()), false);
 

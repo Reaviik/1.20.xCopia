@@ -2,6 +2,7 @@ package com.Infinity.Nexus.Mod.tab;
 
 import com.Infinity.Nexus.Mod.InfinityNexusMod;
 import com.Infinity.Nexus.Mod.block.ModBlocksAdditions;
+import com.Infinity.Nexus.Mod.block.ModBlocksProgression;
 import com.Infinity.Nexus.Mod.item.ModCrystalItems;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import com.Infinity.Nexus.Mod.item.ModItemsProgression;
@@ -110,6 +111,16 @@ public class ModTabAdditions {
                         pOutput.accept(new ItemStack(ModBlocksAdditions.RAW_ALUMINUM_BLOCK.get()));
                         pOutput.accept(new ItemStack(ModBlocksAdditions.RAW_URANIUM_BLOCK.get()));
                         pOutput.accept(new ItemStack(ModBlocksAdditions.RAW_INFINITY_BLOCK.get()));
+
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_SILVER.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_TIN.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_LEAD.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_NICKEL.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_ZINC.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_ALUMINUM.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_URANIUM.get()));
+                        pOutput.accept(new ItemStack(ModItemsAdditions.RAW_INFINITY.get()));
+
                         //ores
                         pOutput.accept(new ItemStack(ModBlocksAdditions.SILVER_ORE.get()));
                         pOutput.accept(new ItemStack(ModBlocksAdditions.TIN_ORE.get()));

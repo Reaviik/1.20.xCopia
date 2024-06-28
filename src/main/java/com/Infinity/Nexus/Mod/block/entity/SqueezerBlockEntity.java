@@ -400,7 +400,7 @@ public class SqueezerBlockEntity extends BlockEntity implements MenuProvider {
 
         ItemStack component = this.itemHandler.getStackInSlot(COMPONENT_SLOT);
 
-        ModUtils.UseComponent(component, level, this.getBlockPos());
+        ModUtils.useComponent(component, level, this.getBlockPos());
 
         FluidStack fluidStack = recipe.get().getFluid();
         this.FLUID_STORAGE.fill(new FluidStack(fluidStack, fluidStack.getAmount()), IFluidHandler.FluidAction.EXECUTE);

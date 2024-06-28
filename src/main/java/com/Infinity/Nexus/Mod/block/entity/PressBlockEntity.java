@@ -276,7 +276,7 @@ public class PressBlockEntity extends BlockEntity implements MenuProvider {
         this.itemHandler.extractItem(INPUT_SLOT, recipe.get().getInputCount(), false);
         ItemStack component = this.itemHandler.getStackInSlot(COMPONENT_SLOT);
 
-        ModUtils.UseComponent(component, level, this.getBlockPos());
+        ModUtils.useComponent(component, level, this.getBlockPos());
 
         level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 1.0f, 1.0f);
         this.itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(result.getItem(),

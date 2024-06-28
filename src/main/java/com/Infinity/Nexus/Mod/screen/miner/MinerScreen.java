@@ -94,12 +94,13 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
         int y = (height - imageHeight) / 2;
         int index = y;
 
-        int hasRedstoneSignal = menu.getBlockEntity().getHasRedstoneSignal();
-        int hasComponent = menu.getBlockEntity().getHasComponent();
-        int hasEnoughEnergy = menu.getBlockEntity().getHasEnoughEnergy();
-        int hasStructure = menu.getBlockEntity().getHasStructure();
-        int hasSlotFree = menu.getBlockEntity().getHasSlotFree();
-        int hasRecipe = menu.getBlockEntity().getHasRecipe();
+        int[] displayInfo = menu.getBlockEntity().getDisplayInfo();
+        int hasRedstoneSignal = displayInfo[0];
+        int hasComponent = displayInfo[1];
+        int hasEnoughEnergy = displayInfo[2];
+        int hasStructure = displayInfo[3];
+        int hasSlotFree = displayInfo[4];
+        int hasRecipe = displayInfo[5];
 
         String hasLink = menu.getBlockEntity().getHasLink();
         ItemStack linkedBlock = menu.getBlockEntity().getLikedBlock();

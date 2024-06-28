@@ -5,7 +5,7 @@
   "fluidInputAmount": 1000,
   "fermenting": true,
   "fluidOutputType": "minecraft:water",
-  "fluidOutputAmount": 5,
+  "fluidOutputAmount": 0,
   "ingredients": [
     {
       "item": "infinity_nexus_mod:sliced_apple",

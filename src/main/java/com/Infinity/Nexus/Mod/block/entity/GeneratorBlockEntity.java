@@ -247,7 +247,6 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
             if(!hasFuel(this)){
                 return;
             }
-            setMaxTransfer();
             removeFuel();
         }
         pLevel.setBlock(pPos, pState.setValue(Generator.LIT, machineLevel+9), 3);
@@ -277,6 +276,7 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
                 BlockEntity neighborBlockEntity = level.getBlockEntity(neighborPos);
                 if (neighborBlockEntity != null && !(neighborBlockEntity instanceof SolarBlockEntity || neighborBlockEntity instanceof GeneratorBlockEntity)) {
                     neighborBlockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy ->{
+                        setMaxTransfer();
                         int amount = Math.min(ENERGY_STORAGE.getEnergyStored(), ENERGY_TRANSFER);
                         if(energy.canReceive() && energy.getEnergyStored() != energy.getMaxEnergyStored()) {
                             if((energy.getMaxEnergyStored() - energy.getEnergyStored()) >= amount){

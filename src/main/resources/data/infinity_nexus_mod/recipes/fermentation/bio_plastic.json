@@ -5,7 +5,7 @@
   "fluidInputAmount": 250,
   "fermenting": false,
   "fluidOutputType": "minecraft:water",
-  "fluidOutputAmount": 250,
+  "fluidOutputAmount": 0,
   "ingredients": [
     {
       "item": "infinity_nexus_mod:strainer",

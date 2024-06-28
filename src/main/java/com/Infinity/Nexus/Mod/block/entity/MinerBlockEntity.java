@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -34,11 +35,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -64,6 +63,8 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         protected void onContentsChanged(int slot) {
             if (slot == getComponentSlot()) {
                 makeStructure();
+                verify = maxVerify;
+                progress = maxProgress;
             }
             setChanged();
         }
@@ -259,32 +260,15 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         return new MinerMenu(pContainerId, pPlayerInventory, this, this.data);
     }
 
-    public static int getStructureSlot() {
-        return STRUCTURE_SLOT;
-    }
-
     public IEnergyStorage getEnergyStorage() {
         return ENERGY_STORAGE;
+    }
+    public int[] getDisplayInfo() {
+        return new int[] { data.get(5), data.get(8), data.get(9), data.get(4), data.get(7), data.get(10)};
     }
 
     public void setEnergyLevel(int energy) {
         this.ENERGY_STORAGE.setEnergy(energy);
-    }
-
-    public int getHasRedstoneSignal() {
-        return data.get(5);
-    }
-
-    public int getStillCrafting() {
-        return data.get(6);
-    }
-
-    public int getHasSlotFree() {
-        return data.get(7);
-    }
-
-    public int getHasComponent() {
-        return data.get(8);
     }
 
     public int getHasEnoughEnergy() {
@@ -293,26 +277,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
 
     public int getHasRecipe() {
         return data.get(10);
-    }
-
-    public int getHasStructure() {
-        return data.get(4);
-    }
-
-    public int getlinkx() {
-        return data.get(11);
-    }
-
-    public int getlinky() {
-        return data.get(12);
-    }
-
-    public int getlinkz() {
-        return data.get(13);
-    }
-
-    public int getlinkFace() {
-        return data.get(14);
     }
 
     public String getHasLink() {
@@ -334,19 +298,19 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         pTag.putInt("miner.progress", progress);
         pTag.putInt("miner.energy", ENERGY_STORAGE.getEnergyStored());
 
-        pTag.putInt("miner.hasStructure", getHasStructure());
+        pTag.putInt("miner.hasStructure", data.get(4));
 
-        pTag.putInt("miner.hasRedstoneSignal", getHasRedstoneSignal());
-        pTag.putInt("miner.stillCrafting", getStillCrafting());
-        pTag.putInt("miner.hasSlotFree", getHasSlotFree());
-        pTag.putInt("miner.hasComponent", getHasComponent());
-        pTag.putInt("miner.hasEnoughEnergy", getHasEnoughEnergy());
-        pTag.putInt("miner.hasRecipe", getHasRecipe());
+        pTag.putInt("miner.hasRedstoneSignal", data.get(5));
+        pTag.putInt("miner.stillCrafting", data.get(6));
+        pTag.putInt("miner.hasSlotFree", data.get(7));
+        pTag.putInt("miner.hasComponent", data.get(8));
+        pTag.putInt("miner.hasEnoughEnergy", data.get(9));
+        pTag.putInt("miner.hasRecipe", data.get(10));
 
-        pTag.putInt("miner.linkx", getlinkx());
-        pTag.putInt("miner.linky", getlinky());
-        pTag.putInt("miner.linkz", getlinkz());
-        pTag.putInt("miner.linkFace", getlinkFace());
+        pTag.putInt("miner.linkx", data.get(11));
+        pTag.putInt("miner.linky", data.get(12));
+        pTag.putInt("miner.linkz", data.get(13));
+        pTag.putInt("miner.linkFace", data.get(14));
 
         super.saveAdditional(pTag);
     }
@@ -516,9 +480,18 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         ItemStack enchantedItem = itemHandler.getStackInSlot(FORTUNE_SLOT);
         ItemStack pickaxe = new ItemStack(Items.NETHERITE_PICKAXE);
         Map<Enchantment, Integer> enchantments = enchantedItem.getAllEnchantments();
-
-        enchantments.forEach(pickaxe::enchant);
-
+        if(enchantedItem.getItem() instanceof EnchantedBookItem){
+            Tag enchantedBook = enchantedItem.getTag();
+            if(enchantedBook != null && !enchantedBook.toString().contains("silk_touch")){
+                pickaxe.enchant(Enchantments.BLOCK_FORTUNE, getFortuneLevel());
+            }
+        }else{
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                if (entry.getKey() != Enchantments.SILK_TOUCH) {
+                    pickaxe.enchant(entry.getKey(), entry.getValue());
+                }
+            }
+        }
         return pickaxe;
     }
 
@@ -526,7 +499,7 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
 
         ItemStack component = this.itemHandler.getStackInSlot(COMPONENT_SLOT);
 
-        ModUtils.UseComponent(component, level, this.getBlockPos());
+        ModUtils.useComponent(component, level, this.getBlockPos());
 
         int fortune = getFortuneLevel();
         ItemStack output = getOutputItem(pos, fortune, machineLevel);
@@ -809,6 +782,8 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
     }
     public void setMachineLevel(ItemStack itemStack, Player player) {
         SetMachineLevel.setMachineLevel(itemStack, player, this, COMPONENT_SLOT, this.itemHandler);
+        verify = maxVerify;
+        progress = maxProgress;
     }
     public void setUpgradeLevel(ItemStack itemStack, Player player) {
         SetUpgradeLevel.setUpgradeLevel(itemStack, player, this, UPGRADE_SLOTS, this.itemHandler);

@@ -91,13 +91,13 @@ public class JEIModPlugin implements IModPlugin {
         registration.addItemStackInfo(new ItemStack(ModBlocksAdditions.MINER.get()), Component.translatable("infinity_nexus_mod.jei_information"));
         registration.addItemStackInfo(new ItemStack(ModBlocksAdditions.MATTER_CONDENSER.get()), Component.translatable("infinity_nexus_mod.jei_information"));
 
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.AMBER_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §51"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.MARINE_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §52"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.CITRIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §53"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.RUBIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §54"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.DEMETRIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §55"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.AGATE_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §56"));
-        registration.addItemStackInfo(new ItemStack(ModCrystalItems.DARIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §57"));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.AMBER_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §51 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.MARINE_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §52 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.CITRIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §53 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.RUBIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §54 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.DEMETRIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §55 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.AGATE_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §56 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
+        registration.addItemStackInfo(new ItemStack(ModCrystalItems.DARIUM_CRYSTAL.get()), Component.translatable("item.infinity_nexus.crystal_description").append(" §57 ").append(Component.translatable("item.infinity_nexus.crystal_description_2")));
 
         registration.addItemStackInfo(new ItemStack(ModItemsAdditions.ANCESTRAL_COMPONENT.get()), Component.translatable("item.infinity_nexus.ancestral_component_description"));
 

@@ -88,6 +88,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(ModBlocksAdditions.MINER.get())
                 .add(ModBlocksAdditions.GENERATOR.get())
                 .add(ModBlocksAdditions.MATTER_CONDENSER.get())
+                .add(ModBlocksAdditions.FACTORY.get())
                 .add(ModBlocksAdditions.RECYCLER.get())
                 .add(ModBlocksAdditions.DISPLAY.get())
                 .add(ModBlocksAdditions.SOLAR.get())
