@@ -12,6 +12,10 @@
   "chat.infinity_nexus_mod.item_dislocator_off": "§bDeslocador de Itens §cDesligado",
   "tooltip.infinity_nexus_mod.item_dislocator": "§4WIPE §eExclui itens largados perto de você em um raio de: §5",
 
+  "item.infinity_nexus_mod.strength_description": "Esse upgrade diminui o custo de de energia de sua maquina.",
+  "item.infinity_nexus_mod.speed_description": "Esse upgrade aumenta a velocidade de sua maquina.",
+  "tooltip.infinity_nexus_mod.upgrade_install": "Clique com o botão direito em uma máquina para instalar esta amplição.",
+
   "item.infinity_nexus_mod.imperial_infinity_3d_sword": "§fEspada Imperial de Infinity 3D",
   "item.infinity_nexus_mod.imperial_infinity_3d_shield": "§fEscudo Imperial de Infinity 3D",
   "tooltip.infinity_nexus_mod.imperial_infinity_3d_sword": "§eCausa os efeitos §7Fraqueza, §3Veneno §ee §9Definhamento §equando atinge",
@@ -323,7 +327,7 @@
   "block.infinity_nexus_mod.mob_crusher": "Matador de Mobs",
 
   "item.infinity_nexus_mod.linking_tool":"Ferramenta de ligação",
-  "tooltip.infinity_nexus.linking_tool": "§bRenomeie este item usando o exemplo abaixo com as coordenadas de destino dos itens (raio de ação: 100 blocos).\n\n§ex=30,y=-51,z=-77,face=up\n\nLados permitidos:\n§bnorth, south, east, west, up, down.",
+  "tooltip.infinity_nexus.linking_tool": "§bRenomeie este item usando o exemplo abaixo com as coordenadas de destino dos itens (raio de ação: 100 blocos).\n§ew=0,x=30,y=-51,z=-77,face=up\n§aLados permitidos:\n§bnorth, south, east, west, up, down.",
   "item.infinity_nexus.miner_description": "§5Mineradora Multibloco.\n§bDeve ser colocada na altura correta em relação ao solo, dependendo do nível do componente instalado.\n§9Adicione energia e aguarde um pouco para que seja criado um exemplo de montagem.\n§9Componente:  §e| §9Altura  §e| §9Estrutura\n§fRedstone:     §e| §f5º       §e| §a-> Wood or Copper.\n§fBasic:          §e| §f5º       §e| §a-> Iron or Gold.\n§eReinforced:   §e| §e7º       §e| §a-> Tin or Lead.\n§eLogic:          §e| §e7º       §e| §a-> Nickel or Brass.\n§cAdvanced:     §e| §c9º       §e| §a-> Bronze, Glass or Steel.\n§cRefined:        §e| §c9º       §e| §a-> Aluminum, Silver or Plástic.\n§5Integral:       §e| §511º      §e| §a-> Industrial.\n§5Infinity:        §e| §511º      §e| §a-> Infinity.",
   "item.infinity_nexus.mod_crusher_description": "Executa rapidamente e silenciosamente inimigos que estiverem acima. A área depende do componente instalado. Caso haja muitos inimigos dentro do raio de ação do Mob Crusher e seus compartimentos estiverem cheios, todos serão executados sem chance de drops.\n§fRedstone:  §a1x1.\n§fBasic: §a3x3.\n§eReinforced: §a5x5\n§eLogic: §a7x7.\n§cAdvanced: §a9x9.\n§cRefined: §a11x11.\n§5Integral: §a13x13.\n§5Infinity: §a15x15",
 

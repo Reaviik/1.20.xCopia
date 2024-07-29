@@ -5,7 +5,9 @@ import com.Infinity.Nexus.Mod.block.ModBlocksProgression;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Set;
@@ -83,7 +85,8 @@ public class ModBlockLootTablesAdditions extends BlockLootSubProvider {
         this.dropSelf(ModBlocksAdditions.MATTER_CONDENSER.get());
         this.dropSelf(ModBlocksAdditions.SOLAR.get());
         this.dropSelf(ModBlocksAdditions.DISPLAY.get());
-
+        this.dropSelf(ModBlocksAdditions.ENTITY_CENTRALIZER.get());
+        this.dropSelf(ModBlocksAdditions.ENTITY_DISPLAY.get());
 
         this.dropSelf(ModBlocksProgression.WOOD_MACHINE_CASING.get());
         this.dropSelf(ModBlocksProgression.COPPER_MACHINE_CASING.get());

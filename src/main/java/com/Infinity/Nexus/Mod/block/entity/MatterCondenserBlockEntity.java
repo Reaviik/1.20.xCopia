@@ -2,12 +2,9 @@ package com.Infinity.Nexus.Mod.block.entity;
 
 import com.Infinity.Nexus.Mod.block.custom.MatterCondenser;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
-import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
-import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.item.ModItemsProgression;
 import com.Infinity.Nexus.Mod.item.custom.ComponentItem;
-import com.Infinity.Nexus.Mod.recipe.MatterCondenserRecipes;
-import com.Infinity.Nexus.Mod.recipe.PressRecipes;
 import com.Infinity.Nexus.Mod.screen.condenser.CondenserMenu;
 import com.Infinity.Nexus.Mod.utils.ModEnergyStorage;
 import com.Infinity.Nexus.Mod.utils.ModUtils;
@@ -44,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
@@ -62,14 +58,14 @@ public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvi
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
     private static final int COMPONENT_SLOT = 2;
-    private static final int CAPACITY = 2147483640;
-    private static final int TRANSFER = 2147483640;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.matter_condenser_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.matter_condenser_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(CAPACITY, TRANSFER/10) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -78,8 +74,8 @@ public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvi
         };
     }
 
-    private static final int ENERGY_REQ = 1;
-    private static final int EXTRATED_ENERGY = CAPACITY / 5000;
+    private static final int ENERGY_REQ = ConfigUtils.matter_condenser_energy_request;
+    private static final int EXTRATED_ENERGY = ENERGY_STORAGE_CAPACITY / 5000;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     private LazyOptional<IEnergyStorage> lazyEnergyStorage = LazyOptional.empty();
@@ -96,7 +92,7 @@ public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvi
 
     protected final ContainerData data;
     private int progress = 0;
-    private int maxProgress = CAPACITY / 20;
+    private int maxProgress = ENERGY_STORAGE_CAPACITY / 20;
     private int catalystLevel = 0;
     private int amplifier = 0;
 
@@ -285,7 +281,7 @@ public class MatterCondenserBlockEntity extends BlockEntity implements MenuProvi
 
     private void increaseCatalystLevel() {
         if(itemHandler.getStackInSlot(INPUT_SLOT).is(ModItemsProgression.RESIDUAL_MATTER.get())){
-            if(catalystLevel < 500000){
+            if(catalystLevel < ConfigUtils.matter_condenser_maximum_catalyst_storage){
                 itemHandler.extractItem(INPUT_SLOT, 1, false);
                 catalystLevel++;
             }

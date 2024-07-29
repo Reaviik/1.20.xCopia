@@ -2,6 +2,7 @@ package com.Infinity.Nexus.Mod.screen.squeezer;
 
 import com.Infinity.Nexus.Mod.InfinityNexusMod;
 import com.Infinity.Nexus.Mod.block.entity.SqueezerBlockEntity;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.screen.renderer.EnergyInfoArea;
 import com.Infinity.Nexus.Mod.screen.renderer.FluidTankRenderer;
 import com.Infinity.Nexus.Mod.screen.renderer.InfoArea;
@@ -38,7 +39,7 @@ public class SqueezerScreen extends AbstractContainerScreen<SqueezerMenu> implem
         assignFluidTank();
     }
     private void assignFluidTank() {
-        fluidRenderer = new FluidTankRenderer(SqueezerBlockEntity.getFluidCapacity(), true, 6, 62);
+        fluidRenderer = new FluidTankRenderer(ConfigUtils.squeezer_fluid_storage_capacity, true, 6, 62);
     }
     private void assignEnergyInfoArea() {
         int x = (width - imageWidth) / 2;

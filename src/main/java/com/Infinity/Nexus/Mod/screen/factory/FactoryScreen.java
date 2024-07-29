@@ -83,7 +83,6 @@ public class FactoryScreen extends AbstractContainerScreen<FactoryMenu> {
 
     private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
         if(menu.isCrafting()) {
-
             guiGraphics.blit(TEXTURE, x + 207, y + 123 , 238, 117,  -62, -menu.getScaledProgress());
 
         }

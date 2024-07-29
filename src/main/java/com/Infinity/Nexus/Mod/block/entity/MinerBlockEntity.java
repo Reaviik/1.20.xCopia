@@ -1,9 +1,9 @@
 package com.Infinity.Nexus.Mod.block.entity;
 
-import com.Infinity.Nexus.Mod.block.custom.Generator;
 import com.Infinity.Nexus.Mod.block.custom.Miner;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.fakePlayer.IFFakePlayer;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import com.Infinity.Nexus.Mod.item.custom.ComponentItem;
@@ -57,7 +57,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MinerBlockEntity extends BlockEntity implements MenuProvider {
-    private CompoundTag customBlockData;
     private final ItemStackHandler itemHandler = new ItemStackHandler(17) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -89,13 +88,14 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
     private static final int LINK_SLOT = 15;
     private static final int FORTUNE_SLOT = 14;
     private static final int STRUCTURE_SLOT = 16;
-    private static final int capacity = 150000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.miner_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.miner_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(capacity, 100000) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -103,8 +103,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
             }
         };
     }
-
-    private static final int ENERGY_REQ = 32;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     private LazyOptional<IEnergyStorage> lazyEnergyStorage = LazyOptional.empty();
@@ -365,7 +363,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         if (!hasEmptySlot()) {
             this.data.set(7, 0);
             pLevel.setBlock(pPos, pState.setValue(Miner.LIT, machineLevel), 3);
-            notifyOwner(machineLevel, pLevel);
             return;
         }
         this.data.set(7, 1);
@@ -393,20 +390,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
             setChanged(pLevel, pPos, pState);
         }
         this.data.set(10, 0);
-    }
-
-    private void notifyOwner(int machineLevel, Level pLevel) {
-        try {
-            if (this.customBlockData != null && this.customBlockData.getInt("ownerNotifyDelay") >= this.customBlockData.getInt("ownerNotifyMaxDelay")) {
-                Player player = pLevel.getPlayerByUUID(this.customBlockData.getUUID("ownerUUID"));
-                player.playNotifySound(SoundEvents.NOTE_BLOCK_GUITAR.get(), SoundSource.BLOCKS, 5.0F, 1.0F);
-                player.sendSystemMessage(Component.literal("§e[§fMiner LVL:§" + +(machineLevel + 1) + " " + (machineLevel + 1) + "§e] §bOs Slots estão Cheios! §e[§5" + this.getBlockPos().getX() + ", " + this.getBlockPos().getY() + ", " + this.getBlockPos().getZ() + "§e]").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tp " + player.getName().getString() + " " + this.getBlockPos().getX() + " " + (this.getBlockPos().getY() + 2) + " " + this.getBlockPos().getZ())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Clique para teleportar.")))));
-                this.customBlockData.putInt("ownerNotifyDelay", 0);
-            }
-            this.customBlockData.putInt("ownerNotifyDelay", this.customBlockData.getInt("ownerNotifyDelay") + 1);
-        } catch (Exception e) {
-
-        }
     }
 
     private boolean hasEmptySlot() {
@@ -519,8 +502,8 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
         Random random = new Random();
-        int randomTier = random.nextInt(100 * (machineLevel + 1));
-        int random1 = random.nextInt(100 * Math.max(machineLevel, 1));
+        int randomTier = random.nextInt(ConfigUtils.miner_tier_crystal_chance * (machineLevel + 1));
+        int random1 = random.nextInt(ConfigUtils.miner_old_tier_crystal_chance * Math.max(machineLevel, 1));
 
         //if (random1 < 10) {
         //    int[] chance = {100, 61, 38, 23, 14, 9, 5, 3, 1};
@@ -531,7 +514,7 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         //        }
         //    }
         //}
-        for(int i = 1; i < machineLevel; i++){
+        for(int i = 1; i < (machineLevel +1); i++){
             if(random1 < i){
                 insertItemOnInventory(new ItemStack(ModUtils.getCrystalType(Math.min(i, 7)).getItem()));
                 break;
@@ -649,11 +632,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
                             facel = value;
                         }
                     }
-                    if (facel.equals("debug")) {
-                        Player player = level.getPlayerByUUID(this.customBlockData.getUUID("ownerUUID"));
-                        player.sendSystemMessage(Component.literal("Pos: " + this.data.get(11) + " " + this.data.get(12) + " " + this.data.get(13) + " " + facel));
-                        player.sendSystemMessage(Component.literal("Name: " + name));
-                    }
                     BlockEntity blockEntity = this.level.getBlockEntity(new BlockPos(xl, yl, zl));
                     if (blockEntity != null && canLink(blockEntity)) {
                         blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, getLinkedSide(facel)).ifPresent(iItemHandler -> {
@@ -742,8 +720,8 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
         int duration = 130;
         int speed = ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS);
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.miner_minimum_tick);
     }
 
     public static int getInputSlot() {
@@ -775,10 +753,6 @@ public class MinerBlockEntity extends BlockEntity implements MenuProvider {
     }
     public void resetVerify() {
         this.data.set(2, this.data.get(3));
-    }
-
-    public void setCustomBlockData(CompoundTag nbt) {
-        this.customBlockData = nbt;
     }
     public void setMachineLevel(ItemStack itemStack, Player player) {
         SetMachineLevel.setMachineLevel(itemStack, player, this, COMPONENT_SLOT, this.itemHandler);

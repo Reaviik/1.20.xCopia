@@ -3,6 +3,7 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.MobCrusher;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.fakePlayer.IFFakePlayer;
 import com.Infinity.Nexus.Mod.fluid.ModFluids;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
@@ -19,8 +20,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -35,7 +34,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -81,11 +79,11 @@ public class MobCrusherBlockEntity extends BlockEntity implements MenuProvider {
     private int hasComponent = 0;
     private int hasEnoughEnergy = 0;
     private int hasRecipe = 0;
-    private static final int ENERGY_CAPACITY = 60000;
-    private static final int ENERGY_TRANSFER = 640;
-    private static final int ENERGY_REQ = 32;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.mob_crusher_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.mob_crusher_energy_transfer_rate;
+    private static final int FLUID_STORAGE_CAPACITY = ConfigUtils.mob_crusher_fluid_storage_capacity;
+    private static final int ENERGY_REQ = ConfigUtils.mob_crusher_energy_request;
     private final FluidTank FLUID_STORAGE = createFluidStorage();
-    private static final int FluidStorageCapacity = 10000;
     private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     private LazyOptional<IEnergyStorage> lazyEnergyStorage = LazyOptional.empty();
@@ -114,7 +112,7 @@ public class MobCrusherBlockEntity extends BlockEntity implements MenuProvider {
                     Direction.EAST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i <= 8, (i, s) -> !(ModUtils.isComponent(s) || ModUtils.isUpgrade(s)))),
                     Direction.WEST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i <= 8, (i, s) -> !(ModUtils.isComponent(s) || ModUtils.isUpgrade(s)))));
 
-    private final ModEnergyStorage ENERGY_STORAGE = new ModEnergyStorage(ENERGY_CAPACITY, ENERGY_TRANSFER) {
+    private final ModEnergyStorage ENERGY_STORAGE = new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
         @Override
         public void onEnergyChanged() {
             setChanged();
@@ -123,7 +121,7 @@ public class MobCrusherBlockEntity extends BlockEntity implements MenuProvider {
     };
 
     private FluidTank createFluidStorage() {
-        return new FluidTank(FluidStorageCapacity) {
+        return new FluidTank(FLUID_STORAGE_CAPACITY) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -258,7 +256,7 @@ public class MobCrusherBlockEntity extends BlockEntity implements MenuProvider {
         return ENERGY_STORAGE;
     }
     public static long getFluidCapacity() {
-        return FluidStorageCapacity;
+        return FLUID_STORAGE_CAPACITY;
     }
     public FluidStack getFluid() {
         return this.FLUID_STORAGE.getFluid();
@@ -406,7 +404,7 @@ public class MobCrusherBlockEntity extends BlockEntity implements MenuProvider {
         progress ++;
     }
     private void setMaxProgress() {
-        maxProgress = 20;
+        maxProgress = ConfigUtils.mob_crusher_work_speed;
     }
     @Nullable
     @Override

@@ -3,6 +3,7 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Factory;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import com.Infinity.Nexus.Mod.recipe.FactoryRecipes;
 import com.Infinity.Nexus.Mod.screen.factory.FactoryMenu;
@@ -16,12 +17,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -71,7 +69,8 @@ public class FactoryBlockEntity extends BlockEntity implements MenuProvider {
     private static final int OUTPUT_SLOT = 16;
     private static final int[] UPGRADE_SLOTS = {17, 18, 19, 20};
     private static final int COMPONENT_SLOT = 21;
-    private static final int EnergyStorageCapacity = 60000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.factory_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.factory_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
@@ -81,7 +80,7 @@ public class FactoryBlockEntity extends BlockEntity implements MenuProvider {
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(EnergyStorageCapacity, 640) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -93,7 +92,7 @@ public class FactoryBlockEntity extends BlockEntity implements MenuProvider {
             return itemHandler.getStackInSlot(slot).isEmpty() ? ItemStack.EMPTY : itemHandler.getStackInSlot(slot);
     }
 
-    private static final int ENERGY_REQ = 32;
+    private static final int ENERGY_REQ = ConfigUtils.factory_energy_request;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     private LazyOptional<IEnergyStorage> lazyEnergyStorage = LazyOptional.empty();
@@ -303,8 +302,15 @@ public class FactoryBlockEntity extends BlockEntity implements MenuProvider {
         int[] amountInput = recipe.get().getAmountInput();
 
 
-        for (int i = 0; i <= INPUT_SLOT; i++) {
-            this.itemHandler.extractItem(i, amountInput[i+1], false);
+        for (int i = 0; i < amountInput.length; i++) {
+            int amount = amountInput[i];
+            for (int slot = 0; slot <= INPUT_SLOT; slot++) {
+                ItemStack item = this.itemHandler.getStackInSlot(slot);
+                if (!item.isEmpty() && recipe.get().getIngredients().get(i).test(item) && amount > 0) {
+                    int extracted = this.itemHandler.extractItem(slot, amount, false).getCount();
+                    amount -= extracted;
+                }
+            }
         }
 
 
@@ -361,8 +367,8 @@ public class FactoryBlockEntity extends BlockEntity implements MenuProvider {
         int duration = getCurrentRecipe().get().getDuration();
         int speed = ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS);
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.factory_minimum_tick);
     }
 
     public static int getInputSlot() {

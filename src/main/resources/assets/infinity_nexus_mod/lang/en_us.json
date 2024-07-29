@@ -12,6 +12,9 @@
   "chat.infinity_nexus_mod.item_dislocator_off": "§bItem Dislocator §cOff",
   "tooltip.infinity_nexus_mod.item_dislocator": "§4WIPE §eDeletes items dropped near you within a radius of:§5 ",
 
+  "item.infinity_nexus_mod.strength_description": "This upgrade decreases the energy cost of your machine.",
+  "item.infinity_nexus_mod.speed_description": "This upgrade increases the speed of your machine.",
+  "tooltip.infinity_nexus_mod.upgrade_install": "Right-click on a machine to install this level upgrade.",
 
   "item.infinity_nexus_mod.imperial_infinity_3d_sword": "§f3D Imperial Infinity Sword",
   "item.infinity_nexus_mod.imperial_infinity_3d_shield": "§f3D Imperial Infinity Shield",
@@ -352,7 +355,7 @@
 
   "item.infinity_nexus_mod.linking_tool":"Linking Tool",
 
-  "tooltip.infinity_nexus.linking_tool": "§bRename this item using the example below with the destination coordinates of the items (action radius: 100 blocks).\n\n§ew=0x=30,y=80,z=-77,face=up\nAllowed sides:\n\n§bnorth, south, east, west, up, down.",
+  "tooltip.infinity_nexus.linking_tool": "§bRename this item using the example below with the destination coordinates of the items (action radius: 100 blocks).\n\n§ew=0,x=30,y=80,z=-77,face=up\n§aAllowed sides:\n\n§bnorth, south, east, west, up, down.",
   "block.infinity_nexus_mod.miner": "Miner",
   "item.infinity_nexus.miner_description": "§5Multiblock Miner.\n§bMust be placed at the correct height relative to the ground, depending on the level of the installed component.\n§9Add energy and wait a bit for an assembly example to be created.\n§9Component: §e| §9Height   §e| §9Structure\n§fRedstone:  §e| §f5th       §e| §f-> Wood or Copper.\n§fBasic:       §e| §f5th       §e| §f-> Iron or Gold.\n§eReinforced:§e| §e7th       §e| §e-> Tin or Lead.\n§eLogic:       §e| §e7th       §e| §e-> Nickel or Brass.\n§cAdvanced:  §e| §c9th       §e| §c-> Bronze, Glass or Steel.\n§cRefined:     §e| §c9th       §e| §c-> Aluminum, Silver or Plastic.\n§5Integral:    §e| §511th      §e| §5-> Industrial.\n§5Infinity:     §e| §511th      §e| §5-> Infinity.",
   "item.infinity_nexus.mod_crusher_description": "Executes quickly and silently enemies that are above. The area depends on the installed component. In case there are many enemies within the action radius of the Mob Crusher and its slots are full, all will be executed without a chance for drops.\n§fRedstone:  §a1x1.\n§fBasic: §a3x3.\n§eReinforced: §a5x5\n§eLogic: §a7x7.\n§cAdvanced: §a9x9.\n§cRefined: §a11x11.\n§5Integral: §a13x13.\n§5Infinity: §a15x15",

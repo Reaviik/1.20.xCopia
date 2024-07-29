@@ -3,6 +3,7 @@ package com.Infinity.Nexus.Mod;
 import com.Infinity.Nexus.Mod.block.ModBlocksAdditions;
 import com.Infinity.Nexus.Mod.block.ModBlocksProgression;
 import com.Infinity.Nexus.Mod.block.entity.ModBlockEntities;
+import com.Infinity.Nexus.Mod.config.*;
 import com.Infinity.Nexus.Mod.entity.ModEntities;
 import com.Infinity.Nexus.Mod.entity.client.AsgreonRenderer;
 import com.Infinity.Nexus.Mod.fluid.ModFluidType;
@@ -41,7 +42,9 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -51,7 +54,7 @@ import org.slf4j.Logger;
 @Mod(InfinityNexusMod.MOD_ID)
 public class InfinityNexusMod
 {
-    // Define mod id in a common place for everything to reference
+    ////// Define mod id in a common place for everything to reference
     public static final String MOD_ID = "infinity_nexus_mod";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -86,6 +89,8 @@ public class InfinityNexusMod
 
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC,"InfinityNexus/config.toml");
 
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, "InfinityNexus/infinity_nexus_mod-common.toml");
     }

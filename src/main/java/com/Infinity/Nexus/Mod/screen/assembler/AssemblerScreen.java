@@ -1,6 +1,8 @@
 package com.Infinity.Nexus.Mod.screen.assembler;
 
 import com.Infinity.Nexus.Mod.InfinityNexusMod;
+import com.Infinity.Nexus.Mod.config.Config;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.screen.renderer.EnergyInfoArea;
 import com.Infinity.Nexus.Mod.screen.renderer.FluidTankRenderer;
 import com.Infinity.Nexus.Mod.screen.renderer.InfoArea;
@@ -37,7 +39,7 @@ public class AssemblerScreen extends AbstractContainerScreen<AssemblerMenu> {
     }
 
     private void assignFluidTank() {
-        fluidRenderer = new FluidTankRenderer(60000, true, 6, 62);
+        fluidRenderer = new FluidTankRenderer(ConfigUtils.assembler_fluid_storage_capacity, true, 6, 62);
     }
 
     private void assignEnergyInfoArea() {
@@ -82,10 +84,10 @@ public class AssemblerScreen extends AbstractContainerScreen<AssemblerMenu> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
+ 
 
         guiGraphics.blit(TEXTURE, x + 2, y-14, 2, 167, 174, 64);
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-
 
         renderProgressArrow(guiGraphics, x, y);
         energyInfoArea.render(guiGraphics);
@@ -108,6 +110,7 @@ public class AssemblerScreen extends AbstractContainerScreen<AssemblerMenu> {
         renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, delta);
         renderTooltip(guiGraphics, mouseX, mouseY);
+
     }
     private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int offsetX, int offsetY, FluidTankRenderer renderer) {
         return MouseUtil.isMouseOver(pMouseX, pMouseY, x + offsetX, y + offsetY, renderer.getWidth(), renderer.getHeight());

@@ -3,7 +3,7 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Recycler;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
-import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.item.ModItemsProgression;
 import com.Infinity.Nexus.Mod.screen.recycler.RecyclerMenu;
 import com.Infinity.Nexus.Mod.utils.ModEnergyStorage;
@@ -16,12 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -59,13 +56,14 @@ public class RecyclerBlockEntity extends BlockEntity implements MenuProvider {
     private static final int OUTPUT_SLOT = 1;
     private static final int[] UPGRADE_SLOTS = {2, 3, 4, 5};
     private static final int COMPONENT_SLOT = 6;
-    private static final int capacity = 60000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.recycler_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.recycler_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(capacity, 32000) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -94,7 +92,7 @@ public class RecyclerBlockEntity extends BlockEntity implements MenuProvider {
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 0;
-    private static final int ENERGY_REQ = 1500;
+    private static final int ENERGY_REQ = ConfigUtils.recycler_energy_request;
 
     public RecyclerBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.RECYCLER_BE.get(), pPos, pBlockState);
@@ -270,8 +268,8 @@ public class RecyclerBlockEntity extends BlockEntity implements MenuProvider {
         int duration = 130;
         int speed = ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS);
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.recycler_minimum_tick);
     }
     private boolean hasEnoughEnergy() {
         return ENERGY_STORAGE.getEnergyStored() >= ENERGY_REQ;

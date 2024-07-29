@@ -263,7 +263,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         .unlockedBy("has_alcohol", inventoryTrigger(ItemPredicate.Builder.item()
                         .of(ModItemsAdditions.ALCOHOL_BOTTLE.get()).build())).save(pWriter);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItemsAdditions.PLASTIC_GOO.get(), 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItemsAdditions.PLASTIC_GOO.get(), 2)
                         .requires(ModItemsAdditions.GLYCERIN.get())
                         .requires(ModItemsAdditions.VINEGAR_BOTTLE.get())
                         .requires(ModItemsAdditions.STARCH.get(), 4)

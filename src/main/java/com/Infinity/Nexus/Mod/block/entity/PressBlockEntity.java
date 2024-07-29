@@ -3,7 +3,7 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Press;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
-import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.recipe.PressRecipes;
 import com.Infinity.Nexus.Mod.screen.press.PressMenu;
 import com.Infinity.Nexus.Mod.utils.ModUtils;
@@ -21,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -66,14 +65,14 @@ public class PressBlockEntity extends BlockEntity implements MenuProvider {
     private static final int OUTPUT_SLOT = 2;
     private static final int[] UPGRADE_SLOTS = {3, 4, 5, 6};
     private static final int COMPONENT_SLOT = 7;
-    private static final int capacity = 60000;
-    private static final int maxTransfer = 640;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.press_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.press_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(capacity, maxTransfer) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -329,8 +328,8 @@ public class PressBlockEntity extends BlockEntity implements MenuProvider {
         int duration = getCurrentRecipe().get().getDuration();
         int speed = ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS);
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.press_minimum_tick);
     }
     public static int getInputSlot() {
         return INPUT_SLOT;

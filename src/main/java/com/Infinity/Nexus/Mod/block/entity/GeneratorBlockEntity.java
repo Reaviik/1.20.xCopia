@@ -3,25 +3,21 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Generator;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.screen.generator.GeneratorMenu;
 import com.Infinity.Nexus.Mod.utils.ModEnergyStorage;
 import com.Infinity.Nexus.Mod.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,8 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -43,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Random;
 
 public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
@@ -61,13 +54,14 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
     private static final int INPUT_SLOT = 0;
     private static final int[] UPGRADE_SLOTS = {1, 2, 3, 4};
     private static final int COMPONENT_SLOT = 5;
-    private static final int capacity = 60000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.generator_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.generator_energy_transfer_rate;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(capacity, 32000) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -238,7 +232,7 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
-
+        setMaxTransfer();
         if(!canInsertEnergy(this)){
             return;
         }
@@ -261,7 +255,7 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void setMaxTransfer() {
-        int energy = (getMachineLevel() + (ModUtils.getSpeed(this.itemHandler, UPGRADE_SLOTS) + ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS))) * 30;
+        int energy = getMachineLevel() * 30;
         ENERGY_TRANSFER = energy <= 0 ? 30 : energy;
     }
 
@@ -276,7 +270,6 @@ public class GeneratorBlockEntity extends BlockEntity implements MenuProvider {
                 BlockEntity neighborBlockEntity = level.getBlockEntity(neighborPos);
                 if (neighborBlockEntity != null && !(neighborBlockEntity instanceof SolarBlockEntity || neighborBlockEntity instanceof GeneratorBlockEntity)) {
                     neighborBlockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy ->{
-                        setMaxTransfer();
                         int amount = Math.min(ENERGY_STORAGE.getEnergyStored(), ENERGY_TRANSFER);
                         if(energy.canReceive() && energy.getEnergyStored() != energy.getMaxEnergyStored()) {
                             if((energy.getMaxEnergyStored() - energy.getEnergyStored()) >= amount){

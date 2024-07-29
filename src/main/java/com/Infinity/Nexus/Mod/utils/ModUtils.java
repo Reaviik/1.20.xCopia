@@ -46,8 +46,9 @@ public class ModUtils {
     public static int getSpeed(ItemStackHandler itemHandler, int[] upgradeSlots) {
         int speed = 0;
         for (int i : upgradeSlots) {
-            if (itemHandler.getStackInSlot(i).getItem() == ModItemsAdditions.SPEED_UPGRADE.get()) {
-                speed++;
+            ItemStack stack = itemHandler.getStackInSlot(i);
+            if (stack.getItem() == ModItemsAdditions.SPEED_UPGRADE.get()) {
+                speed += stack.getCount();
             }
         }
         return speed;

@@ -78,6 +78,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(ModBlocksAdditions.ASPHALT.get())
                 .add(ModBlocksAdditions.STRUCTURAL_BLOCK.get())
                 .add(ModBlocksAdditions.EXPLORAR_PORTAL_FRAME.get())
+                .add(ModBlocksAdditions.VOXEL_BLOCK.get())
 
                 .add(ModBlocksAdditions.MOB_CRUSHER.get())
                 .add(ModBlocksAdditions.CRUSHER.get())
@@ -93,6 +94,8 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(ModBlocksAdditions.DISPLAY.get())
                 .add(ModBlocksAdditions.SOLAR.get())
                 .add(ModBlocksAdditions.FERMENTATION_BARREL.get())
+                .add(ModBlocksAdditions.ENTITY_CENTRALIZER.get())
+                .add(ModBlocksAdditions.ENTITY_DISPLAY.get())
 
                 .add(ModBlocksProgression.COPPER_MACHINE_CASING.get())
                 .add(ModBlocksProgression.SILVER_MACHINE_CASING.get())
@@ -108,7 +111,16 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
                 .add(ModBlocksProgression.GLASS_MACHINE_CASING.get())
                 .add(ModBlocksProgression.STEEL_MACHINE_CASING.get())
                 .add(ModBlocksProgression.INDUSTRIAL_MACHINE_CASING.get())
-                .add(ModBlocksProgression.INFINITY_MACHINE_CASING.get());
+                .add(ModBlocksProgression.INFINITY_MACHINE_CASING.get())
+
+                .add(ModBlocksAdditions.PURPLE_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.YELLOW_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.WHITE_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.RED_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.ORANGE_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.PINK_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.GREEN_LIGHT_CRYSTAL.get())
+                .add(ModBlocksAdditions.BLUE_LIGHT_CRYSTAL.get());
 
         this.tag(BlockTags.MINEABLE_WITH_AXE)
                 .add(ModBlocksProgression.WOOD_MACHINE_CASING.get());

@@ -49,7 +49,7 @@ public class FactoryRecipes implements Recipe<SimpleContainer> {
 
         for (int i = 1; i < 17; i++) {
             for (int j = 0; j < 16; j++) {
-                if (inputItems.get(i).test(pContainer.getItem(j)) && !slotsVerificados.contains(j)) {
+                if (inputItems.get(i).test(pContainer.getItem(j)) && !slotsVerificados.contains(j) && pContainer.getItem(j).getCount() == amountInput[i]) {
                     matches++;
                     slotsVerificados.add(j);
                     break;

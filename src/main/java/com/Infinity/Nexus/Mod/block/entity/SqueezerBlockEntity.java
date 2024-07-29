@@ -3,7 +3,7 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Squeezer;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
-import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.recipe.SqueezerRecipes;
 import com.Infinity.Nexus.Mod.screen.squeezer.SqueezerMenu;
 import com.Infinity.Nexus.Mod.utils.ModEnergyStorage;
@@ -21,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -75,9 +74,9 @@ public class SqueezerBlockEntity extends BlockEntity implements MenuProvider {
     private static final int OUTPUT_FLUID_SLOT = 3;
     private static final int[] UPGRADE_SLOTS = {4, 5, 6, 7};
     private static final int COMPONENT_SLOT = 8;
-    private static final int capacity = 60000;
-    private static final int maxTransfer = 640;
-    private static final int fluidCapacity = 5000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.squeezer_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.squeezer_energy_transfer_rate;
+    private static final int fluidCapacity = ConfigUtils.squeezer_fluid_storage_capacity;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
     private final FluidTank FLUID_STORAGE = createFluidStorage();
@@ -100,7 +99,7 @@ public class SqueezerBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(capacity, maxTransfer) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -454,8 +453,8 @@ public class SqueezerBlockEntity extends BlockEntity implements MenuProvider {
         int duration = getCurrentRecipe().get().getDuration();
         int speed = ModUtils.getSpeed(itemHandler, UPGRADE_SLOTS);
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.squeezer_minimum_tick);
     }
 
     public static int getInputSlot() {

@@ -3,6 +3,8 @@ package com.Infinity.Nexus.Mod.block.entity;
 import com.Infinity.Nexus.Mod.block.custom.Assembler;
 import com.Infinity.Nexus.Mod.block.entity.common.SetMachineLevel;
 import com.Infinity.Nexus.Mod.block.entity.common.SetUpgradeLevel;
+import com.Infinity.Nexus.Mod.config.Config;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.fluid.ModFluids;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import com.Infinity.Nexus.Mod.recipe.AssemblerRecipes;
@@ -22,7 +24,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -75,8 +76,9 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
     private static final int COMPONENT_SLOT = 13;
     private static final int FLUID_ITEM_INPUT_SLOT = 14;
     private static final int FLUID_ITEM_OUTPUT_SLOT = 15;
-    private static final int EnergyStorageCapacity = 60000;
-    private static final int FluidStorageCapacity = 10000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.assembler_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.assembler_energy_transfer_rate;
+    private static final int FLUID_STORAGE_CAPACITY = ConfigUtils.assembler_fluid_storage_capacity;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
     private final FluidTank FLUID_STORAGE = createFluidStorage();
@@ -87,7 +89,7 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(EnergyStorageCapacity, 640) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -97,7 +99,7 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private FluidTank createFluidStorage() {
-        return new FluidTank(FluidStorageCapacity) {
+        return new FluidTank(FLUID_STORAGE_CAPACITY) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -113,7 +115,7 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
         };
     }
 
-    private static final int ENERGY_REQ = 32;
+    private static final int ENERGY_REQ = ConfigUtils.assembler_energy_request;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     private LazyOptional<IEnergyStorage> lazyEnergyStorage = LazyOptional.empty();
@@ -326,8 +328,9 @@ public class AssemblerBlockEntity extends BlockEntity implements MenuProvider {
             speed++;
         }
 
-        duration = duration / Math.max((machineLevel + speed), 1);
-        maxProgress = Math.max(duration, 5);
+        //duration = duration / Math.max((machineLevel + speed), 1);
+        duration = duration - (machineLevel * Math.max(speed, 1));
+        maxProgress = Math.max(duration, ConfigUtils.assembler_minimum_tick);
     }
     private void extractEnergy(AssemblerBlockEntity assemblerBlockEntity) {
         int energy = getCurrentRecipe().get().getEnergy();

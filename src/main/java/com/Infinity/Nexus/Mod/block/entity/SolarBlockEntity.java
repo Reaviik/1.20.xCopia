@@ -1,6 +1,7 @@
 package com.Infinity.Nexus.Mod.block.entity;
 
 import com.Infinity.Nexus.Mod.block.custom.Solar;
+import com.Infinity.Nexus.Mod.config.ConfigUtils;
 import com.Infinity.Nexus.Mod.item.ModItemsAdditions;
 import com.Infinity.Nexus.Mod.screen.solar.solar.SolarMenu;
 import com.Infinity.Nexus.Mod.utils.ModEnergyStorage;
@@ -25,9 +26,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.DaylightDetectorBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -54,15 +53,15 @@ public class SolarBlockEntity extends BlockEntity implements MenuProvider {
     };
     private static final int COMPONENT_SLOT = 0;
     private static final int ENERGY_TRANSFER = 5832;
-    private static final int TRANSFER = 64000;
-    private static final int CAPACITY = 512000;
+    private static final int ENERGY_STORAGE_CAPACITY = ConfigUtils.solar_energy_storage_capacity;
+    private static final int ENERGY_TRANSFER_RATE = ConfigUtils.solar_energy_transfer_rate;
     private static int GEM = 0;
 
     private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
 
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(CAPACITY, TRANSFER) {
+        return new ModEnergyStorage(ENERGY_STORAGE_CAPACITY, ENERGY_TRANSFER_RATE) {
             @Override
             public void onEnergyChanged() {
                 setChanged();

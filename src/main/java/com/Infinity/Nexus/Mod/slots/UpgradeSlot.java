@@ -19,6 +19,6 @@ public class UpgradeSlot extends SlotItemHandler {
 
     @Override
     public int getMaxStackSize() {
-        return 1;
+        return 4;
     }
 }
